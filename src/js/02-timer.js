@@ -3,6 +3,8 @@ import flatpickr from "flatpickr";
 // Дополнительный импорт стилей
 import "flatpickr/dist/flatpickr.min.css";
 
+import Notiflix from 'notiflix';
+
 const refs = {
     input: document.querySelector('#datetime-picker'),
     startBtn: document.querySelector('button[data-start]'),
@@ -79,7 +81,9 @@ function setInt() {
         refs.clockMinutes.textContent = "00";
         refs.clockSeconds.textContent = "00";
         refs.input.removeAttribute("disabled"); //?
-        return alert("ВРЕМЯ ЗАКОНЧИЛОСЬ!!!");
+        // Notiflix.Notify.warning('ВРЕМЯ ЗАКОНЧИЛОСЬ!!!');
+        return Notiflix.Notify.warning('ВРЕМЯ ЗАКОНЧИЛОСЬ!!!', { timeout: 3000, },);
+        // return alert("ВРЕМЯ ЗАКОНЧИЛОСЬ!!!");
     };
 
     // const { days, hours, minutes, seconds } = convertMs(deltaTime); //* Деструктуризация, РАБОТАЕТ
@@ -106,7 +110,8 @@ function timerStart(evt) {
     if (finalTime < DateNow) {
         refs.startBtn.setAttribute("disabled", "true"); //?
         refs.input.removeAttribute("disabled"); //?
-        return alert("Please choose a date in the future");
+        // return alert("Please choose a date in the future");
+        return Notiflix.Notify.failure('Please choose a date in the future', { timeout: 2000, },);
     };
 
     refs.startBtn.setAttribute("disabled", "true"); //?
