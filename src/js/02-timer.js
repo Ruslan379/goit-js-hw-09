@@ -12,16 +12,18 @@ const refs = {
     clockSeconds: document.querySelector('[data-seconds]'),
 };
 
-
 // console.log(refs.clockDays.textContent);
 
 let intervalId = null;
-let finalTime = 0;
-let isActive = false;
+let finalTime = 0; //! время в мс, введенное в input
 
-refs.startBtn.addEventListener('click', timerStart);
+refs.startBtn.setAttribute("disabled", "true"); //! блокируем кнопку Start до ввода даты
 
-//! Подключение библиотеки flatpickr
+refs.startBtn.addEventListener('click', timerStart); //! Вешаю слушателя на кнопку Start
+refs.input.addEventListener('input', inputDate); //! Вешаю слушателя на input
+
+//TODO Подключение библиотеки flatpickr
+
 const options = {
     enableTime: true,
     time_24hr: true,
@@ -33,14 +35,21 @@ const options = {
     },
 };
 
-//! Запуск библиотеки flatpickr
+//TODO Запуск библиотеки flatpickr
+
 flatpickr("#datetime-picker", options);
 
+//! Ввод даты в форму:
+function inputDate() {
+    // console.log("Вешаю слушателя на input"); //!
 
+    refs.startBtn.removeAttribute("disabled");
+}
 
+//! Запуск интервального таймера
 const timer = {
     start() {
-        // const finalTime = new Date(1659925828784).;
+        // const finalTime = new Date(1659925828784).; 
         // console.log(finalTime);
         // console.log(new Date(1657815478717).getTime());
 
@@ -48,31 +57,61 @@ const timer = {
     }
 };
 
-//
+
+//! Работа интервального таймера
 function setInt() {
 
-    console.log("Запуск таймера 1 раз в секунду, finalTime:", finalTime);
+    // console.log("Запуск интервального таймера 1 раз в секунду, finalTime:", finalTime); //!
+
 
     const currentTime = Date.now();
-    console.log("Теукущее время =  currentTime", currentTime);
+    // console.log("Теукущее время =  currentTime", currentTime); //!
 
     const deltaTime = finalTime - currentTime;
 
-    if (deltaTime < 0) clearTimeout(intervalId),
+    // console.log("Разница во времени =  deltaTime", deltaTime); //!
 
-        console.log("Разница во времени =  deltaTime", deltaTime);
-    const { days, hours, minutes, seconds } = convertMs(deltaTime);
-    // console.log(timeComponents);
-    console.log(`${days}:${hours}:${minutes}:${seconds}`);
+    //! Проверка на окончание ВРЕМЕНИ ОБРАТНОГО ОТСЧЕТА
+    if (deltaTime <= 0) {
+        clearInterval(intervalId);
+        refs.clockDays.textContent = "00";
+        refs.clockHours.textContent = "00";
+        refs.clockMinutes.textContent = "00";
+        refs.clockSeconds.textContent = "00";
+        refs.input.removeAttribute("disabled"); //?
+        return alert("ВРЕМЯ ЗАКОНЧИЛОСЬ!!!");
+    };
 
-    updateClockface({ days, hours, minutes, seconds });
+    // const { days, hours, minutes, seconds } = convertMs(deltaTime); //* Деструктуризация, РАБОТАЕТ
+    const timeComponents = convertMs(deltaTime); //! функция конвертации ms в формат времени (ОБЪЕКТ ДАТЫ)
+    // console.log(timeComponents); //!
+
+    // console.log(`${days}:${hours}:${minutes}:${seconds}`); //* Деструктуризация, РАБОТАЕТ
+
+    // updateClockface({ days, hours, minutes, seconds }); //* Деструктуризация, РАБОТАЕТ
+
+    updateClockface(timeComponents); //! функция конвертации ОБЪЕКТА ДАТЫ в элементы интерфейса
 }
 
 
 
 //! Запуск таймера обратного отсчета:
 function timerStart(evt) {
-    console.log("Вешаю слушателя на кнопку Start");
+    // console.log("Вешаю слушателя на кнопку Start"); //!
+
+    //! Проверка на валидную дату (в будущем)
+    // console.log("finalTime", finalTime); //!
+    const DateNow = Date.now();
+    // console.log("DateNow", DateNow); //!
+    if (finalTime < DateNow) {
+        refs.startBtn.setAttribute("disabled", "true"); //?
+        refs.input.removeAttribute("disabled"); //?
+        return alert("Please choose a date in the future");
+    };
+
+    refs.startBtn.setAttribute("disabled", "true"); //?
+    refs.input.setAttribute("disabled", "true"); //?
+
     timer.start();
 }
 
@@ -80,10 +119,16 @@ function timerStart(evt) {
 //! Метод pad - принимает число, приводит к строке и добавляет в начало 0 если число меньше 2-х знаков
 function addLeadingZero(value) {
     return String(value).padStart(2, '0');
-}
+};
 
 
-//! функци конвертации ms в формат времени
+//! функция конвертации ms в формат времени (ОБЪЕКТ ДАТЫ)
+/*
+ * - Принимает время в миллисекундах
+ * - Высчитывает сколько в них вмещается дней/часов/минут/секунд
+ * - Возвращает обьект со свойствами days, hours, minutes, seconds
+ * - Рисует интерфейс
+ */
 function convertMs(ms) {
     // Number of milliseconds per unit of time
     const second = 1000;
@@ -107,14 +152,15 @@ function convertMs(ms) {
 // console.log(convertMs(140000)); // {days: 0, hours: 0, minutes: 2, seconds: 20}
 // console.log(convertMs(24140000)); // {days: 0, hours: 6 minutes: 42, seconds: 20}
 
+
+//! функция конвертации ОБЪЕКТА ДАТЫ в элементы интерфейса
 /*
- * - Принимает время в миллисекундах
- * - Высчитывает сколько в них вмещается дней/часов/минут/секунд
+ * - Принимает ОБЪЕКТ, содержащий ДАТУ
+ * - Возвращает значения свойств: days, hours, minutes, seconds
  * - Рисует интерфейс
  */
 function updateClockface({ days, hours, minutes, seconds }) {
-    // refs.clockface.textContent = `${hours}:${mins}:${secs}`;
-    console.log(`${days}:${hours}:${minutes}:${seconds}`);
+    // console.log(`${days}:${hours}:${minutes}:${seconds}`); //! Консолит работу таймера обратного отсчета:
 
     refs.clockDays.textContent = days;
     refs.clockHours.textContent = hours;
