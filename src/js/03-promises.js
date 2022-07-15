@@ -28,7 +28,7 @@ refs.form.addEventListener('submit', onFormSubmit); //! Вешаю слушат�
 function onFormSubmit(evt) {
   evt.preventDefault();
 
-  console.log('Отправляем форму'); //!
+  // console.log('Отправляем форму'); //!
 
 
   // console.log(refs.inputDelay.name, refs.inputDelay.value);
@@ -53,29 +53,42 @@ function onFormSubmit(evt) {
   // formData.amount = evt.target.elements.amount.value
   // console.log(formData); //!
 
-  // //! Собираем значения всех полей input form в переменные (2-ой вариант)
+  //! Собираем значения всех полей input form в переменные (2-ой вариант)
   // delay = +formData.delay
   // step = +formData.step
   // amount = +formData.amount
 
-  // //! Собираем значения всех полей input form в переменные (3-ий вариант)
-  // const { delay, step, amount } = evt.target.elements. .value
+  //! Собираем значения всех полей input form в переменные (3-ий вариант)
+  //! Надо привести к числу - НЕ РАБОТАЕТ
+
+  // let {
+  //   delay: { value: delay },
+  //   step: { value: step },
+  //   amount: { value: amount },
+  // } = evt.target.elements
 
 
+  //! Собираем значения всех полей input form в переменные (4-ий вариант)
+  let {
+    elements: { delay, step, amount },
+  } = evt.currentTarget;
 
+  delay = Number(delay.value);
+  step = Number(step.value);
+  amount = Number(amount.value);
 
 
 
   //! Консолим все значения собранные со всех полей input form
-  console.log("Delay", delay); //!
-  console.log("step", step); //!
-  console.log("amount", amount); //!
+  // console.log("Delay", delay); //!
+  // console.log("step", step); //!
+  // console.log("amount", amount); //!
 
   //! Запуск цикла amount-раз
   for (let position = 1; position <= amount; position += 1) {
     if (position > 1) {
       delay = delay + step;
-      console.log(delay); //!
+      // console.log(delay); //!
     };
     //! Вызов функции createPromise
     createPromise(position, delay)
@@ -98,7 +111,7 @@ function createPromise(position, delay) {
 
     setTimeout(() => {
       if (shouldResolve) {
-        console.log("from promise", position, delay) //!
+        // console.log("from promise", position, delay) //!
         resolve({ position, delay });
       }
       reject({ position, delay });
