@@ -110,8 +110,8 @@ function timerStart(evt) {
     if (finalTime < DateNow) {
         refs.startBtn.setAttribute("disabled", "true"); //?
         refs.input.removeAttribute("disabled"); //?
-        // return alert("Please choose a date in the future");
-        return Notiflix.Notify.failure('Please choose a date in the future', { timeout: 2000, },);
+        alert("Please choose a date in the future"); //? Fixed mentor remarks
+        return Notiflix.Notify.failure('Please choose a date in the future', { timeout: 1500, },);
     };
 
     refs.startBtn.setAttribute("disabled", "true"); //?

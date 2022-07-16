@@ -30,7 +30,6 @@ function onFormSubmit(evt) {
 
   // console.log('Отправляем форму'); //!
 
-
   // console.log(refs.inputDelay.name, refs.inputDelay.value);
   // console.log(refs.inputStep.name, refs.inputStep.value);
   // console.log(refs.inputAmount.name, refs.inputAmount.value);
@@ -101,6 +100,8 @@ function onFormSubmit(evt) {
         Notiflix.Notify.failure(`❌ Rejected promise ${position} in ${delay}ms`, { timeout: 4000, },);
       });
   }
+  //! чистим все input form после submit
+  evt.currentTarget.reset(); //? Fixed mentor remarks
 }
 
 
