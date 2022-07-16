@@ -4,7 +4,7 @@ q.startBtn.addEventListener("click",(
 //! Запуск таймера обратного отсчета:
 function(t){
 //! Проверка на валидную дату (в будущем)
-const n=Date.now();if(K<n)return q.startBtn.setAttribute("disabled","true"),q.input.removeAttribute("disabled"),e(B).Notify.failure("Please choose a date in the future",{timeout:2e3});q.startBtn.setAttribute("disabled","true"),q.input.setAttribute("disabled","true"),$.start()}
+const n=Date.now();if(K<n)return q.startBtn.setAttribute("disabled","true"),q.input.removeAttribute("disabled"),alert("Please choose a date in the future"),e(B).Notify.failure("Please choose a date in the future",{timeout:1500});q.startBtn.setAttribute("disabled","true"),q.input.setAttribute("disabled","true"),$.start()}
 //! Метод pad - принимает число, приводит к строке и добавляет в начало 0 если число меньше 2-х знаков
 )),//! Вешаю слушателя на кнопку Start
 q.input.addEventListener("input",(
@@ -22,4 +22,4 @@ if(n<=0)return clearInterval(J),q.clockDays.textContent="00",q.clockHours.textCo
 function({days:e,hours:t,minutes:n,seconds:a}){q.clockDays.textContent=e,q.clockHours.textContent=t,q.clockMinutes.textContent=n,q.clockSeconds.textContent=a}(
 //! функция конвертации ms в формат времени (ОБЪЕКТ ДАТЫ)
 function(e){const t=1e3,n=60*t,a=60*n,i=24*a,o=z(Math.floor(e/i)),r=z(Math.floor(e%i/a)),l=z(Math.floor(e%i%a/n)),c=z(Math.floor(e%i%a%n/t));return{days:o,hours:r,minutes:l,seconds:c}}(n))}function z(e){return String(e).padStart(2,"0")}
-//# sourceMappingURL=02-timer.43828580.js.map
+//# sourceMappingURL=02-timer.ef80674e.js.map
